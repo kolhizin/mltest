@@ -7,7 +7,7 @@
     - Pandas
     - SQL connectors (MS SQL)
     - Jupyter
-    - statmodels, sklearn
+    - statsmodels, sklearn
     - [optional] OpenCV
     - GPGPU environment
     
