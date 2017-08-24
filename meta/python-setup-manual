@@ -1,0 +1,23 @@
+1. What is needed
+    - MinGW & GCC
+    - BLAS (e.g. OpenBLAS)
+    - Theano & TensorFlow
+    - [optional] Torch
+    - NumPy / SciPy / Matplotlib
+    - Pandas
+    - SQL connectors (MS SQL)
+    - Jupyter
+    - statmodels, sklearn
+    - [optional] OpenCV
+    - GPGPU environment
+    
+2. Setup manual
+    1) MinGW & GCC
+    2) BLAS
+    3) GPGPU
+    4) Anaconda (py3.6)
+    5) Create 2 environmets: py35 (for theano) and py36 (for tensorflow)
+    6) Install TensorFlow from sources
+    7) Install Theano from sources
+
+3. Tests for Tensorflow
