@@ -1,0 +1,28 @@
+1) Install Anaconda (Anaconda3-4.4.0)
+	a) just me
+	b) C:\Anaconda3\
+	c) DO NOT add to PATH, Register as default python3.6
+2) Update conda
+	>conda update conda
+	(4.3.21 -> 4.3.25)
+3) Install nb_conda
+	>conda install nb_conda
+4) Install m2w64-toolchain
+5) Create environments
+	>conda create -n pytf --clone root
+	>conda create -n pytfgpu --clone root
+	>conda create -n pytheano python=3.5
+6) Install ipykernel in all environments
+7) Install CUDA
+8) Install CuDNN
+9) Install Theano
+	>activate pytheano
+	(pytheano)>conda install theano pygpy
+	a) [optional] add cl.exe to %PATH% (e.g. Visual Studio 2015)
+	b) [optional] add 'device='gpu0'' to %THEANO_FLAGS%
+10) Install TensorFlow-CPU
+	>activate pytf
+	(pytf)>conda install tensorflow
+11) Install TensorFlow-GPU
+	>activate pytfgpu
+	(pytfgpu)>conda install tensorflow-gpu
