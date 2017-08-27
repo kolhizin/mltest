@@ -26,3 +26,9 @@
 11) Install TensorFlow-GPU
 	>activate pytfgpu
 	(pytfgpu)>conda install tensorflow-gpu
+12) [Optional] Install support for pdf convert
+	a) Install pandoc (for nbconvert to pdf)
+		>conda install pandoc
+	b) Install MikTex (http://www.texts.io/support/0002/)
+		per user installation
+		install all packages on-the-fly
