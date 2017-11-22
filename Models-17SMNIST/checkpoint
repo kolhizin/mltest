@@ -1,0 +1,3 @@
+model_checkpoint_path: "D:/Jupyter/mltest/Models-17SMNIST/model01LOGREG-0999.ckpt"
+all_model_checkpoint_paths: "D:/Jupyter/mltest/Models-17SMNIST/model01LOGREG-0998.ckpt"
+all_model_checkpoint_paths: "D:/Jupyter/mltest/Models-17SMNIST/model01LOGREG-0999.ckpt"
