@@ -27,3 +27,10 @@ def splitSample(tensorTuple, pcts=[1]):
     else:
         z = np.random.uniform(size=tensorTuple.shape[0])
         return tuple(tensorTuple[(z >= a) & (z < b),] for (a,b) in ranges)
+    
+def makeMapping(col1, col2):
+    v = np.vstack([np.array(col1), np.array(col2)]).transpose()
+    m = [(x[0],x[1]) for x in v]
+    m1 = dict(m)
+    m2 = dict([(x[1],x[0]) for x in m])
+    return m, m1, m2

@@ -1,0 +1,17 @@
+1) to shorter schema:
+    - id / int32
+    - dt / int32
+    - rnk / int32
+    - num_short, num_50 + num_75 + num_985 = num_long, num_100, num_unq / 4 x int32
+    - total_time / float
+    8 x 4 = 32 bytes
+    300mln rows => 10GB in binary form
+
+2) to monthly schema:
+    - id / int32
+    - dt / int32
+    - rnk / int32
+    - sum(num_short), sum(num_long), sum(num_100), sum(num_unq), sum(total_time)
+    - count(num_unq)
+    
+3) feature selection for current and previous month from logs
