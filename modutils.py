@@ -1,4 +1,5 @@
 import numpy as np
+import sklearn, sklearn.metrics, sklearn.preprocessing, sklearn.linear_model
 
 def shuffleBatches(tensorTuple, batchSize=64):
     if type(tensorTuple) is list or type(tensorTuple) is tuple: 
@@ -27,6 +28,25 @@ def splitSample(tensorTuple, pcts=[1]):
     else:
         z = np.random.uniform(size=tensorTuple.shape[0])
         return tuple(tensorTuple[(z >= a) & (z < b),] for (a,b) in ranges)
+    
+def calcBinClassMetrics(X, y, model, cutoff=0.5):
+    y_p = np.maximum(0.00001, np.minimum(0.99999, model.predict_proba(X)[:, 1]))
+    y_l = np.log(y_p / (1 - y_p))
+    y_f = (y_p > cutoff)*1
+    gini = sklearn.metrics.roc_auc_score(y, y_l) * 2 - 1
+    acc = sklearn.metrics.accuracy_score(y, y_f)
+    logloss = sklearn.metrics.log_loss(y, y_p)
+    logloss_i = sklearn.metrics.log_loss(y, y_f)
+    return (gini, acc, logloss, logloss_i)
+
+def calcBinClassMetrics_Continuous(X, y, model_class=sklearn.linear_model.LogisticRegression(), cutoff=0.5):
+    model = model_class.fit(X, y)
+    return calcBinClassMetrics(X, y, model, cutoff=cutoff)
+
+def calcBinClassMetrics_Discrete(X, y, model_class=sklearn.linear_model.LogisticRegression(), cutoff=0.5):
+    Xt = sklearn.preprocessing.OneHotEncoder().fit_transform(X)
+    model = model_class.fit(Xt, y)
+    return calcBinClassMetrics(Xt, y, model, cutoff=cutoff)
     
 def makeMapping(col1, col2):
     v = np.vstack([np.array(col1), np.array(col2)]).transpose()
