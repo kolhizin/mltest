@@ -2,18 +2,24 @@ import numpy as np
 import sklearn, sklearn.metrics, sklearn.preprocessing, sklearn.linear_model
 
 def shuffleBatches(tensorTuple, batchSize=64):
-    if type(tensorTuple) is list or type(tensorTuple) is tuple: 
-        ids = list(range(tensorTuple[0].shape[0]))
+    if type(tensorTuple) is tuple: 
+        ids = list(range(len(tensorTuple[0])))
         np.random.shuffle(ids)
         for i in range(0,len(ids),batchSize):
             lst = min(len(ids), i + batchSize)
-            yield (np.array(x[ids[i:lst],]) for x in tensorTuple)
+            if type(tensorTuple[0]) is list:
+                yield ([x[z] for z in ids[i:lst]] for x in tensorTuple)
+            else:
+                yield (np.array(x[ids[i:lst],]) for x in tensorTuple)
     else:
-        ids = list(range(tensorTuple.shape[0]))
+        ids = list(range(len(tensorTuple)))
         np.random.shuffle(ids)
         for i in range(0,len(ids),batchSize):
             lst = min(len(ids), i + batchSize)
-            yield np.array(tensorTuple[ids[i:lst],])
+            if type(tensorTuple) is list:
+                yield [tensorTuple[z] for z in ids[i:lst]]
+            else:
+                yield np.array(tensorTuple[ids[i:lst],])
             
             
 def splitSample(tensorTuple, pcts=[1]):
@@ -22,12 +28,20 @@ def splitSample(tensorTuple, pcts=[1]):
     cumvpct = np.append(-0.1, np.cumsum(cumvpct))
     cumvpct[-1] = 1.1 #in order to exclude (1 < 1) situations
     ranges = [(cumvpct[i], cumvpct[i+1]) for i in range(len(pcts))]
-    if type(tensorTuple) is list or type(tensorTuple) is tuple:
-        z = np.random.uniform(size=tensorTuple[0].shape[0])
-        return tuple(tuple(x[(z >= a) & (z < b),] for x in tensorTuple) for (a,b) in ranges)
+    if type(tensorTuple) is tuple:
+        z = np.random.uniform(size=len(tensorTuple[0]))
+        if type(tensorTuple[0]) is list:
+            w = np.array(range(len(tensorTuple[0])))
+            return tuple(tuple([x[y] for y in w[(z >= a) & (z < b)]] for x in tensorTuple) for (a,b) in ranges)
+        else:            
+            return tuple(tuple(x[(z >= a) & (z < b)] for x in tensorTuple) for (a,b) in ranges)
     else:
-        z = np.random.uniform(size=tensorTuple.shape[0])
-        return tuple(tensorTuple[(z >= a) & (z < b),] for (a,b) in ranges)
+        z = np.random.uniform(size=len(tensorTuple))
+        if type(tensorTuple) is list:
+            w = np.array(range(len(tensorTuple)))
+            return tuple([tensorTuple[y] for y in w[(z >= a) & (z < b)]] for (a,b) in ranges)
+        else:
+            return tuple(tensorTuple[(z >= a) & (z < b)] for (a,b) in ranges)
     
 def calcBinClassMetrics(X, y, model, cutoff=0.5):
     y_p = np.maximum(0.00001, np.minimum(0.99999, model.predict_proba(X)[:, 1]))
