@@ -1,4 +1,5 @@
 import numpy as np
+import time
 import sklearn, sklearn.metrics, sklearn.preprocessing, sklearn.linear_model
 
 def shuffleBatches(tensorTuple, batchSize=64):
@@ -68,3 +69,50 @@ def makeMapping(col1, col2):
     m1 = dict(m)
     m2 = dict([(x[1],x[0]) for x in m])
     return m, m1, m2
+
+def runEpoch(tfs, train_set, batch_size, set2feeddict, op_train, op_loss=None, batch_steps=1, verbatim=False):
+    total = len(train_set[0]) if type(train_set) is tuple else len(train_set)
+    step = 0
+    for batch in shuffleBatches(train_set, batchSize=batch_size):
+        batchobj = tuple(batch) if type(train_set) is tuple else batch 
+
+        cur_size = len(batchobj[0]) if type(train_set) is tuple else len(batchobj)
+        train_dict = set2feeddict(batchobj)
+        
+        tt0 = time.perf_counter()
+        
+        if op_loss is None:
+            for i in range(batch_steps):
+                tfs.run(op_train, feed_dict=train_dict)
+        else:
+            for i in range(batch_steps):
+                (tl, _) = tfs.run([op_loss, op_train], feed_dict=train_dict)
+                if i == 0:
+                    tl0 = tl
+
+        tl1 = tfs.run(op_loss, feed_dict=train_dict) if op_loss is not None else 0
+        tt1 = time.perf_counter()
+        step += cur_size
+        if verbatim:
+            if op_loss is not None:
+                print('{0}/{1}:\t{2:.3f} -> {3:.3f}\t{4:.2f} sec'.format(step, total, tl0, tl1, tt1-tt0), end='\r')
+            else:
+                print('{0}/{1}:\t{2:.2f} sec'.format(step, total, tt1-tt0), end='\r')
+    
+def runDataset(tfs, calc_set, batch_size, set2feeddict, ops):
+    if type(calc_set) is tuple:
+        total = len(calc_set[0])
+    else:
+        total = len(calc_set)
+    
+    step = 0
+    res = []
+    while step < total:
+        tS = calc_set[step:(step+batch_size)] if type(calc_set) is not tuple else tuple(z[step:(step+batch_size)] for z in calc_set)
+        cdict = set2feeddict(tS)
+        act_size = min(total, step+batch_size) - step
+        
+        tmp = tfs.run(ops, feed_dict=cdict)
+        res.append((step, act_size, tmp))
+        step += batch_size
+    return res
