@@ -5,6 +5,8 @@ Top-25
 Other
 
 Not sorted:
+https://www.springboard.com/blog/data-science-blogs/
+
 A Blog From a Human-engineer-being http://www.erogol.com/ (RSS)
 Aakash Japi http://aakashjapi.com/ (RSS)
 Adit Deshpande https://adeshpande3.github.io/ (RSS)
