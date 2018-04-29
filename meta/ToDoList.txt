@@ -1,8 +1,0 @@
-- HelloWorld for major packages (TF, Theano, BLAS, etc.)
-
-- Performance benchmark: numpy, theano, tensorflow
-- MNIST: logit, svm, nn (dropout, momentum, batch-normalization, elu, etc.), cnn
-- Participate in Sberbank & Mercedes
-- Variable analysis?
-- Learn about theano, pytorch
-- Check books (buy)
